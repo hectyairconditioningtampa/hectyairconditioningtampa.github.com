@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Hecty Air Conditioning Truck and Car Repair</title>
+<link rel="icon" type="image/png" href="logo.png">
+<style>
+    :root {
+        --primary-gold: #c5a059;
+        --success-green: #22c55e;
+        --dark-bg: #0f172a;
+        --glass: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+    }
+
+    .ac-luxury-page {
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: var(--text-main);
+        padding: 40px 20px;
+        line-height: 1.6;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* NAVIGATION WITH SWAP LOGIC */
+    .top-nav-buttons {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        z-index: 10;
+    }
+
+    .nav-left, .nav-right {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-top-corner {
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        color: var(--text-main);
+        padding: 10px 20px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+    }
+
+    .btn-home-swap {
+        border-color: var(--primary-gold);
+        background: rgba(197, 160, 89, 0.15);
+    }
+
+    .btn-top-corner:hover {
+        border-color: var(--primary-gold);
+        background: rgba(197, 160, 89, 0.1);
+        transform: translateY(-2px);
+    }
+
+    /* HEADER */
+    .journal-header { text-align: center; margin-bottom: 60px; margin-top: 60px; }
+    
+    h1 {
+        font-size: clamp(2.5rem, 6vw, 3.5rem);
+        background: linear-gradient(to right, #fff, var(--primary-gold));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    /* ARTICLE GRID */
+    .journal-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 30px;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .post-card {
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 25px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .post-card:hover {
+        transform: translateY(-12px);
+        border-color: var(--primary-gold);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .post-thumb {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .post-body { padding: 25px; }
+
+    .post-meta {
+        font-size: 0.75rem;
+        color: var(--primary-gold);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .post-title {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        line-height: 1.3;
+        font-weight: 700;
+    }
+
+    .post-excerpt {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+    }
+
+    .post-link {
+        color: var(--text-main);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+    .post-link:hover { color: var(--primary-gold); }
+
+    /* --- MODAL STYLES (POP-UP) --- */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 20px;
+    }
+
+    .modal-content {
+        background: #1e293b;
+        border: 1px solid var(--primary-gold);
+        border-radius: 30px;
+        max-width: 700px;
+        width: 100%;
+        max-height: 85vh;
+        overflow-y: auto;
+        padding: 40px;
+        position: relative;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 20px; right: 25px;
+        font-size: 2rem;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .close-modal:hover { color: var(--primary-gold); }
+
+    .modal-body h2 { 
+        text-align: left; 
+        background: none; 
+        -webkit-text-fill-color: var(--primary-gold);
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+    }
+
+    .modal-body p { color: var(--text-muted); line-height: 1.8; margin-bottom: 15px; }
+
+    /* ANIMATIONS */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; }
+
+    @media (max-width: 768px) {
+        .journal-grid { grid-template-columns: 1fr; }
+        .top-nav-buttons { top: 10px; padding: 0 10px; }
+        .btn-top-corner { padding: 8px 12px; font-size: 0.65rem; }
+    }
+</style>
+</head>
+<body>
+
+<div class="ac-luxury-page">
+    
+    <div class="top-nav-buttons fade-in">
+        <div class="nav-left">
+            <a href="about.html" class="btn-top-corner">ℹ️ About</a>
+            <a href="index.html" class="btn-top-corner btn-home-swap">🏠 Home</a>
+        </div>
+        <div class="nav-right">
+            <a href="servicios.html" class="btn-top-corner">🛠️ Services</a>
+            <a href="galeria.html" class="btn-top-corner">📸 Gallery</a>
+            <a href="faq.html" class="btn-top-corner">❓ FAQ</a>
+        </div>
+    </div>
+
+    <header class="journal-header fade-in">
+        <h1>Technical Journal</h1>
+        <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 600px; margin: 0 auto;">
+            Expert perspectives on mechanics, refrigeration, and maintaining your investment.
+        </p>
+    </header>
+
+    <main class="journal-grid">
+        
+        <article class="post-card fade-in" style="animation-delay: 0.2s;">
+            <img src="acmotriz.jpg" class="post-thumb">
+            <div class="post-body">
+                <span class="post-meta">Apr 19, 2026 • A/C Tips</span>
+                <h2 class="post-title">Why does your truck's A/C lose power at idle?</h2>
+                <p class="post-excerpt">We analyze the mechanical causes behind efficiency loss when the engine isn't under load.</p>
+                <a class="post-link" onclick="openModal('ralenti')">Read full article <span>→</span></a>
+            </div>
+        </article>
+
+        <article class="post-card fade-in" style="animation-delay: 0.3s;">
+            <img src="UPS.jpg" class="post-thumb">
+            <div class="post-body">
+                <span class="post-meta">Apr 15, 2026 • Refrigeration</span>
+                <h2 class="post-title">Optimizing fuel consumption in Thermo King APUs</h2>
+                <p class="post-excerpt">Small technical adjustments that can save you hundreds of dollars on long-haul routes.</p>
+                <a class="post-link" onclick="openModal('thermoking')">Read full article <span>→</span></a>
+            </div>
+        </article>
+
+        <article class="post-card fade-in" style="animation-delay: 0.4s;">
+            <img src="fan.jpg" class="post-thumb">
+            <div class="post-body">
+                <span class="post-meta">Apr 10, 2026 • Heavy Mechanics</span>
+                <h2 class="post-title">The impact of the Fan Clutch on your engine's lifespan</h2>
+                <p class="post-excerpt">An overlooked component that defines the thermal health of high-performance diesel engines.</p>
+                <a class="post-link" onclick="openModal('fanclutch')">Read full article <span>→</span></a>
+            </div>
+        </article>
+
+    </main>
+
+    <div id="modalContainer" class="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalBody" class="modal-body">
+                </div>
+        </div>
+    </div>
+
+    <footer style="text-align: center; margin-top: 100px; padding-bottom: 40px; border-top: 1px solid var(--glass-border); padding-top: 40px;">
+        <p style="color: var(--text-muted); font-size: 0.8rem;">© 2026 Hecty Air Conditioning Truck and Car Repair. All rights reserved.</p>
+    </footer>
+
+</div>
+
+<script>
+    const articulos = {
+        ralenti: {
+            titulo: "Why does your truck's A/C lose power at idle?",
+            contenido: `
+                <p>When a truck is parked with the engine running (idling), there is no natural airflow through the condenser. This forces the cooling system to rely exclusively on the fan.</p>
+                <p><b>Common Diagnosis:</b> If the air blows cold while driving but warms up when you stop, the condenser is likely dirty or the fan clutch isn't engaging with the necessary force.</p>
+                <p>Preventative maintenance including a chemical cleaning of the external coils can solve this issue and prevent the compressor from working at dangerous pressures.</p>
+            `
+        },
+        thermoking: {
+            titulo: "Optimizing fuel consumption in Thermo King APUs",
+            contenido: `
+                <p>APU units are compact diesel engines designed for efficiency. To maintain those savings, it is crucial to check belt tension and filter conditions every 500 hours of use.</p>
+                <p>Small air leaks in the induction system or dirty injectors can cause the APU to burn more fuel than necessary to maintain cabin temperature.</p>
+                <p>Keep your investment operating at minimum cost with a periodic review of battery charging sensors.</p>
+            `
+        },
+        fanclutch: {
+            titulo: "The impact of the Fan Clutch on your engine's lifespan",
+            contenido: `
+                <p>The Fan Clutch is the guardian of your engine's temperature. If it gets stuck, it consumes unnecessary fuel; if it fails to engage, it risks the integrity of the cylinder head and gaskets due to overheating.</p>
+                <p>In high-performance diesel engines, a correctly operating Fan Clutch ensures the engine works within its ideal thermal range, extending the life of the oil and internal components.</p>
+                <p>We recommend airflow tests and electric solenoid inspections during every major service.</p>
+            `
+        }
+    };
+
+    function openModal(id) {
+        const articulo = articulos[id];
+        const body = document.getElementById('modalBody');
+        body.innerHTML = `<h2>${articulo.titulo}</h2>${articulo.contenido}`;
+        document.getElementById('modalContainer').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevents background scroll
+    }
+
+    function closeModal() {
+        document.getElementById('modalContainer').style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restores scroll
+    }
+</script>
+
+</body>
+</html>
